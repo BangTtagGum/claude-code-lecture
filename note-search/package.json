@@ -1,0 +1,21 @@
+{
+  "name": "note-search",
+  "version": "0.1.0",
+  "description": "Fuzzy search over your markdown notes (lecture toy app)",
+  "type": "module",
+  "bin": {
+    "notes": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "tsc -p tsconfig.json",
+    "cli": "tsx src/cli/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}

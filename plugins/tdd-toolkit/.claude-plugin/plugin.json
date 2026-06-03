@@ -1,0 +1,10 @@
+{
+  "name": "tdd-toolkit",
+  "displayName": "TDD Toolkit",
+  "description": "Enforce test-first development: a PreToolUse hook that blocks implementation edits without a matching test file, plus a unit-test-writer agent that writes concise, convention-aligned tests.",
+  "version": "0.1.0",
+  "author": {
+    "name": "jylee"
+  },
+  "keywords": ["tdd", "testing", "hook", "unit-test"]
+}

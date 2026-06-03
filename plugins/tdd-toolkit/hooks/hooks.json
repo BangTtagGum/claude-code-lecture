@@ -1,0 +1,17 @@
+{
+  "description": "TDD Guard — block implementation edits when no matching test file exists.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/tdd-guard.sh",
+            "statusMessage": "TDD Guard 검사 중..."
+          }
+        ]
+      }
+    ]
+  }
+}

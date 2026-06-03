@@ -1,0 +1,23 @@
+{
+  "skill_name": "junit-test-writer",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "방금 만든 DiscountService 클래스에 대한 유닛 테스트 작성해줘. VIP/REGULAR/게스트 등급별 할인이랑 쿠폰 적용 로직이 핵심이야. JUnit5 + AssertJ 쓰는 프로젝트야.",
+      "expected_output": "A DiscountServiceTest.java with thorough coverage: VIP 20% vs 25% at the 100000 threshold (test on/below/above boundary), REGULAR 10%, guest/null/unknown membership = no discount, coupon subtraction, price floored at zero when coupon exceeds price, and negative/null basePrice throwing IllegalArgumentException. Uses AssertJ assertThat / assertThatThrownBy. No Mockito needed (no dependencies).",
+      "files": ["fixtures/DiscountService.java"]
+    },
+    {
+      "id": 1,
+      "prompt": "OrderService.placeOrder 메서드 테스트 좀 작성해줘. repository, inventoryClient, paymentGateway 세 개를 의존하고 있어. 재고 부족이나 결제 실패 같은 케이스도 다 커버해주면 좋겠어.",
+      "expected_output": "An OrderServiceTest.java using @ExtendWith(MockitoExtension.class), @Mock for the three dependencies and @InjectMocks for the service. Covers: happy path (saves order, charges customer for quantity*unitPrice, returns id), quantity<=0 throws IllegalArgumentException, insufficient stock throws OutOfStockException (and verifies no save/charge happened), gateway failure marks order FAILED + saves again + throws PaymentException wrapping the cause. Uses verify(...) for interactions and AssertJ for assertions.",
+      "files": ["fixtures/OrderService.java", "fixtures/support.java"]
+    },
+    {
+      "id": 2,
+      "prompt": "CartSummaryService.summarize에 대한 테스트를 빈틈없이 작성해줘. 빈 카트, 무료배송 기준 금액 경계 같은 것도 꼭 챙겨줘.",
+      "expected_output": "A CartSummaryServiceTest.java covering: empty list (total 0, count 0, no free shipping), single line, multiple lines summed correctly, free-shipping boundary at 50000 (just below = false, exactly = true, above = true — ideally a @ParameterizedTest), null list throws IllegalArgumentException, and a negative quantity line throws IllegalArgumentException. Uses AssertJ.",
+      "files": ["fixtures/CartSummaryService.java"]
+    }
+  ]
+}

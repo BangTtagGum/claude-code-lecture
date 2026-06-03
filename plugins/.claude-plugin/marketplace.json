@@ -1,0 +1,13 @@
+{
+  "name": "lecture-local",
+  "owner": {
+    "name": "jylee"
+  },
+  "plugins": [
+    {
+      "name": "tdd-toolkit",
+      "source": "./tdd-toolkit",
+      "description": "TDD Guard hook + unit-test-writer agent."
+    }
+  ]
+}
