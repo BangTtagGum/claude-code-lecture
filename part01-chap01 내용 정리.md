@@ -142,3 +142,128 @@
 | `ESC` ×2 | `/resume`과 같은 기능 — 코드·대화 되돌리기, 요약 가능 |
 | `!` | `git status` 같은 명령을 터미널을 새로 열지 않고 Claude 프롬프트에서 바로 실행 |
 
+
+Skills
+
+Skills 2단계 로딩
+1. 평소-세션 시작 시 : name + description만 로딩
+2. 호출- claude 자동 매칭, 또는 /skill-name 호출 : SKILL.md 본문 + 지원 파일 LazyLoading
+
+/plugin 을 통해 /skill-creater 라는 skill을 만들어주는 스킬을 다운받아 해당 스킬로 스킬 생성 가능.
+
+
+hooks
+
+CLAUDE.md X하지마세요는 요청, Hook은 강제
+절대 하지 않도록 하게 하고싶으면 hooks에 추가 
+
+PreToolUse : 도구 호출 직전
+PostToolUse: 도구 호출 직후
+Notification : 사용자 응답 대기
+Stop: 에이전트 턴 종료 
+
+프로젝트 단위 세팅은 projectroot/.claude/settings.json에서 설정 가능
+```
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/tdd-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+```
+
+프로젝트 단위 로컬 세팅은 projectroot/.claude/settings.local.json에서 설정 가능
+
+프로젝트 단위가 아닌 유저단위 세팅은 ~/.claude/settings.json에서 설정 가능 : 모든 프로젝트에 적용
+
+memory
+memory는 MEMORY.md에 기억해달라고 하는 내용들이 저장된다.
+프로젝트 단위는 ~/.claude/projects 하위에 프로젝트 의 /memory에 존재한다.
+유저 단위는 ~/.claude/memory에 존재하낟.
+
+MEMORY.md에는 어떤 내용들을 불러올지 관련된 md파일의 Index만 가지고 있고, Index를 통해 실제 파일을 호출한다
+
+
+자동화 시간 단위
+
+이벤트 -> 세션 -> 클라우드 적합한 자리가 다르다
+
+Hook 
+이벤트(밀리초)
+실행 : 로컬 세션
+트리거: 도구 호출, 메시지
+머신: 세션 살아야
+매번 보장 필요한 작업
+
+/loop
+세션 안 (분~시간)
+
+실행: 로컬 세션
+트리거 : 인터벌,동적,loop.md
+머신: 세션 살아야
+작업 중 모니터 폴링,배포검증,pr 베이비시팅 
+
+/routing
+영구 (시간~ 월)
+실행: Anthropic 클라우드
+트리거: cron,API,github
+머신: 꺼져도 ok
+정기 자동화 경고 분류, PR 리뷰
+
+이벤트마다 -> Hook
+작업중 -> /loop
+머신 꺼져도 -> /routine
+
+
+클로드 잘 사용하는 워크플로우 패턴들
+
+1. 검증 미리 알리기
+어떤 함수를 작성할 때 테스트 케이스를 주고 이 테스트 케이스가
+통과되는지 확인을 꼭 해달라 검증 요청
+
+검증 기준이 확실한 작업이면 품질 좋은 결과가 나올 확률이 훨씬 높다
+
+2. 탐색 -> 계획 -> 코드 -> 커밋
+어떤거를 개발하기전에 plan모드를 이용해 탐색과 계획을 정확하게 짜야한다. (기획과 구현 분리)
+계획은 ctrl + G 로 직접 편집 가능
+
+이후 계획을 기반으로 구현
+
+3. 구체적 컨텍스트 = 정확도
+지시가 정확할 수록 수정 횟수가 줄어든다
+클로드가 시작할  수 있는 시작점을 잡아주는게 좋다. 이게 왜 이상하냐 보단 여기 보면서 이 api가 왜 이상하냐 이런식으로
+
+4. 프롬프트에게 좋은 컨텍스트 주는 방법
+- 파일 참조 :이 파일 읽어봐라
+- 스크린샷이나 디자인 이미지를 잘 활용해라
+- 텍스트 설명 대신 원본을 주입해라.
+
+5. claude가 인터뷰하게 하기
+어떤 앱을 만들고싶은데 너가 질문을 좀 해줘.
+-> 클로드가 이것저것 질문하면서 추천해줌
+
+!!! 계획세션과 구현 세션을 분리할건데
+계획세션이 매우 중요하다.
+
+6. claude -p 
+비대화형 모드
+
+세션을 열지 않고 클로드와 대화를 나눌 수 있다.(바로 응답을 추천)
+[구조화 출력]
+claude -p "ci cd signal 분석 리포트 작성해줘." --output-format json
+[빠른 시작 (--bare)]
+claude --bare -p "이 파일 요약" --allowedTools "Read"
+  
+--bare: hooks,skills,plugins,MCP,CLAUDE.md 자동로드를 모두 건너뜀. 시작이 빠르고 - 무엇보다 재현성이 보장된다.
+
+대화형 = 사람용, 비대화형 = 파이프라인용
