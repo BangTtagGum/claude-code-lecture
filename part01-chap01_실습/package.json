@@ -1,0 +1,21 @@
+{
+  "name": "ch01-quiz",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Claude Code Ch01 review quiz",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint src",
+    "build": "esbuild src/main.js --bundle --format=iife --global-name=Quiz --outfile=dist/quiz.js",
+    "test": "vitest run",
+    "check": "npm run lint && npm run build && npm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.11"
+  }
+}
